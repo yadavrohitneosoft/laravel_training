@@ -56,15 +56,14 @@ class ProductController extends Controller
     public function addProduct(Request $request){
         $catid = $request->input('p_cat');
         $title = $request->input('ptitle'); 
-        $desc = $request->input('desc');
-        $validator = Validator::make($request->all(), [
+        $desc = $request->input('desc'); 
+        $isValid = $this->checkValidator($request->all(), [
             'p_cat' => 'required',
             'ptitle' => 'required',
-            'desc' => 'required' 
-        ]); 
-        //if($genericValidator($request->all(), []))
-        if($validator->fails()) { 
-            return $this->errorResponse($validator->messages()->first(), 202); 
+            'desc' => 'required'
+        ]);
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202); 
         }else{   
             $find = Category::find($catid); 
             $catname = $find->getOriginal('title');
@@ -105,14 +104,14 @@ class ProductController extends Controller
         $cat_id = $request->input('p_cat_id');
         $title = $request->input('ptitle'); 
         $desc = $request->input('desc');
-        $validator = Validator::make($request->all(), [
+        $isValid = $this->checkValidator($request->all(), [
             'pid' => 'required',
             'p_cat_id' => 'required',
             'ptitle' => 'required',
             'desc' => 'required' 
         ]);
-        if($validator->fails()) { 
-            return $this->errorResponse($validator->messages()->first(), 202);  
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202);  
         }else{  
             $find = Category::find($cat_id); 
             $catname = $find->getOriginal('title');

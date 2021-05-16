@@ -51,11 +51,11 @@ class CategoryController extends Controller
     //add category
     public function addCategory(Request $request){ 
         $title = $request->input('ctitle'); 
-        $validator = Validator::make($request->all(), [
+        $isValid = $this->checkValidator($request->all(), [
             'ctitle' => 'required' 
         ]); 
-        if($validator->fails()) { 
-            return $this->errorResponse($validator->messages()->first(), 202);
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202);
         }else{   
             $this->categoryModel->title      =  $title;
             $this->categoryModel->created_at =  $this->now;
@@ -103,12 +103,12 @@ class CategoryController extends Controller
     public function updateCategory(Request $request){ 
         $id = $request->input('cid');
         $c_title = $request->input('c_title'); 
-        $validator = Validator::make($request->all(), [
+        $isValid = $this->checkValidator($request->all(), [
             'cid' => 'required',
             'c_title' => 'required'
         ]); 
-        if($validator->fails()) { 
-            return $this->errorResponse($validator->messages()->first(), 202);  
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202);  
         }else{    
             $update = Category::where('id',$id)->update(array('title' => $c_title));  
             if($update){

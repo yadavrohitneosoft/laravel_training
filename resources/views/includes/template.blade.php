@@ -54,7 +54,7 @@
         <!-- <script src="{{ URL::asset('/') }}public/js/admin/chart-area-demo.js"></script> -->
         <!-- <script src="{{ URL::asset('/') }}public/js/admin/chart-bar-demo.js}}"></script> -->  
         <script src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"></script>
-        <script src="{{ URL::asset('/') }}js/admin/datatables-demo.js"></script>
+        <script src="{{ URL::asset('/') }}js/admin/datatables-demo.js"></script> 
         @yield('script')
     </body>
 </html>

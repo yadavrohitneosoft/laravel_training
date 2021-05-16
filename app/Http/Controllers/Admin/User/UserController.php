@@ -53,15 +53,15 @@ class UserController extends Controller
         $email = $request->input('email');
         $utype = $request->input('u_type');
         $password = Hash::make($request->input('password')); 
-        $validator = Validator::make($request->all(), [
+        $isValid = $this->checkValidator($request->all(), [
             'f_name' => 'required|string|max:50',
             'l_name' => 'required|string|max:50', 
             'email' => 'required|email|unique:users',
             'u_type' => 'required',
             'password' => 'required|min:6'
         ]); 
-        if($validator->fails()) { 
-            return $this->errorResponse($validator->messages()->first(), 202); 
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202); 
         }else{   
             $save = User::create([
                 'firstname' => $fname,
@@ -119,14 +119,14 @@ class UserController extends Controller
         $lname = $request->input('l_name');
         $utype = $request->input('u_type');
         $password = Hash::make($request->input('password')); 
-        $validator = Validator::make($request->all(), [
+        $isValid = $this->checkValidator($request->all(), [
             'uid' => 'required',
             'f_name' => 'required|string|max:50',
             'l_name' => 'required|string|max:50',  
             'u_type' => 'required', 
         ]); 
-        if($validator->fails()) { 
-            return $this->errorResponse($validator->messages()->first(), 202);
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202);
         }else{   
             $update = User::where('id',$id)->update(array(
                 'firstname' => $fname,

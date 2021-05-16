@@ -109,7 +109,10 @@
     <!--  model end -->   
 
 <script type="text/javascript"> 
-    $(document).ready(function() {
+    $(document).ready(function() { 
+        //tooltip reference
+        $('[data-toggle="tooltip"]').tooltip();
+         
         $(window).scroll(function(){
             if ($(window).scrollTop() >= 50) { 
                 //$('.onscrollFixed').addClass('fixed-header'); 

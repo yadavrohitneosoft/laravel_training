@@ -68,15 +68,15 @@ class LoginController extends Controller
         $email = $request->input('email');
         $utype = $request->input('u_type');
         $password = Hash::make($request->input('password')); 
-        $validator = Validator::make($request->all(), [
+        $isValid = $this->checkValidator($request->all(), [
             'f_name' => 'required|string|max:50',
             'l_name' => 'required|string|max:50', 
             'email' => 'required|email|unique:users',
             'u_type' => 'required',
             'password' => 'required|min:6'
         ]); 
-        if($validator->fails()) { 
-            return $this->errorResponse($validator->messages()->first(), 202);
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202);
         }else{   
             $save = User::create([
                 'firstname' => $fname,
