@@ -104,4 +104,52 @@ function show_hide_pass() {
         $(".p-viewer2").removeClass('hidden');
     }
 }
+
+//to show the process button before form success
+function showProcessing(type){   
+    if(type==='submit'){
+        $("#submit").addClass('hidden');
+        $("#process").removeClass('hidden');
+    }else if(type==='update'){
+        $("#submit_edit").addClass('hidden');
+        $("#process_edit").removeClass('hidden');
+    }
+}
+
+//to hide process button after form success
+function hideProcessing(type){  
+    if(type==='submit'){
+        $("#submit").removeClass('hidden');
+        $("#process").addClass('hidden');
+    }else if(type==='update'){
+        $("#submit_edit").removeClass('hidden');
+        $("#process_edit").addClass('hidden');
+    }  
+}
+
+//function to show success message
+function showSuccessMessage(message=''){    
+    $(".formSuccess").removeClass('hidden');
+    $(".formSuccess").html(message);
+}
+
+//function to hide success message
+function hideSuccessMessage(){    
+    $(".formSuccess").addClass('hidden');
+    $(".formSuccess").html('');
+}
+
+//function to show error message
+function showErrorMessage(message=''){
+    $(".formError").removeClass('hidden');
+    $(".formError").html(message);
+    $(".formError").addClass('error');
+}
+
+//function to remove error class and message
+function removeErrorAttr(){
+    $(".formError").addClass('hidden');
+    $(".formError").html('');
+    $(".formError").removeClass('error');
+}
  

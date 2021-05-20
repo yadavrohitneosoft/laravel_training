@@ -12,19 +12,26 @@
 */
 
 Auth::routes();
-Route::get('/','Admin\Administrator@index'); 
-Route::get('/login','Admin\Administrator@index');
-Route::post('/post_login','Admin\Authentication\LoginController@index');
-Route::get('/logout','Admin\Administrator@logout');
-Route::get('/register','Admin\Authentication\LoginController@register');
-Route::post('/do_register','Admin\Authentication\LoginController@doRegister');
-Route::get('/test', 'Admin\Category\CategoryController@getCat');
+
 
 //using the middleware - prevent-back-history to prevent going back from the browser after logout or session timeout
 
+//Auth Routing
+Route::group(['middleware' => 'prevent-back-history'], function() { 
+    Route::get('/','Admin\Administrator@index'); 
+    Route::get('/login','Admin\Administrator@index');
+    Route::post('/post_login','Admin\Authentication\LoginController@index');
+    Route::get('/logout','Admin\Administrator@logout');
+    Route::get('/register','Admin\Authentication\LoginController@register');
+    Route::post('/do_register','Admin\Authentication\LoginController@doRegister');
+    Route::get('/otp_verification', 'Admin\Authentication\LoginController@otp_verification');
+    Route::post('/otpVerify', 'Admin\Authentication\LoginController@otpVerify');
+    Route::post('/otpResend', 'Admin\Authentication\LoginController@otpResend');
+});
+
 //Dashboard Routing
 Route::group(['prefix' => '/dashboard', 'middleware' => 'prevent-back-history'], function() {
-    Route::get('/index','Admin\Administrator@home')->name('dashboardHome');
+    Route::get('/index','Admin\Administrator@home')->name('dashboardHome'); 
 });
 //Category Routing
 Route::group(['prefix' => '/manage-category', 'middleware' => 'prevent-back-history'], function() {

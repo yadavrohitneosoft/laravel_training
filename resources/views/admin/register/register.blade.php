@@ -21,11 +21,11 @@
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-4">
                                     <div class="card-header">
-                                        <h3 class="text-center font-weight-light " style="margin-top: 10px;"><img src="https://www.neosofttech.com/sites/all/themes/neosoft2017/images/neosoft.svg" style="height: 50px;"></h3>
+                                        <h3 class="text-center font-weight-light " style="margin-top: 10px;"><img src="{{ asset('images/neosoft.svg') }}" style="height: 50px;"></h3>
                                     </div>
                                     <div class="card-body loginform">
-                                        <p class="regerror text-center hidden"></p>
-                                        <p class="regsuccess text-center hidden"></p>
+                                        <p class="formError text-center hidden"></p>
+                                        <p class="formSuccess text-center hidden"></p>
                                         <form action="javascript:void(0);" id="register" class="" method="post" name="login" autocomplete="off">
                                             <div class="form-group mb0">
                                                 <label class="small mb-1" for="f_name">First Name</label>
@@ -148,8 +148,7 @@
                         $('#err_conf_pass').html('Confirm Password should match.');
                         $('#inputPassword').addClass('errorclass');
                     }else {
-                        //console.log(fname+'--'+lname+'--'+utype+'--'+email+'--'+password+'--'+cpassword);
-                        doRegister();
+                         doRegister();
                     }
                 });
             }
@@ -163,30 +162,23 @@
                     data: formData,
                     dataType: 'json', 
                     beforeSend: function() {
-                        $("#submit").addClass('hidden');
-                        $("#process").removeClass('hidden');
+                        showProcessing('submit'); //show processing before form success
                     },
                     success: function(result) { 
-                        if(result.response_msg === 'success') {
-                            //console.log(result);
+                        if(result.response_msg === 'success') { 
                             $("#register")[0].reset();
-                            $(".regsuccess").removeClass('hidden');
-                            $('.regsuccess').html(result.message);
+                            showSuccessMessage(result.message); //show success message
                             setTimeout(function(){
+                                hideSuccessMessage(); //hide success message 
                                 window.location.replace(baseUrl + result.data.redirect_url);
                             },2000);
                         }else if(result.response_msg === 'error') {  
-                            $(".regerror").html(result.message);
-                            $(".regerror").addClass('error');
-                            $(".regerror").removeClass('hidden');
+                            showErrorMessage(result.message);
                             setTimeout(function() {
-                                $(".regerror").html('');
-                                $(".regerror").addClass('hidden');
-                                $(".regerror").removeClass('error');
+                                removeErrorAttr(); //remove error with attr
                             }, 3000);
                         } 
-                        $("#submit").removeClass('hidden');
-                        $("#process").addClass('hidden');
+                        hideProcessing('submit'); //hide processing after form success
                     }
                 });
             }

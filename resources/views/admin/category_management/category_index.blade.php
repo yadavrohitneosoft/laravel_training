@@ -83,8 +83,8 @@
                     <!-- Modal body start-->
                         <div class="modal-body modalBody" id="">
                             <div class="card-body loginform">
-                                <p class="regerror text-center hidden"></p>
-                                <p class="regsuccess text-center hidden" style="color:green"></p>
+                                <p class="formError text-center hidden"></p>
+                                <p class="formSuccess text-center hidden" style="color:green"></p>
                                 <form action="javascript:void(0);" id="add_cat" class="" method="post" autocomplete="off">
                                     <div class="form-group">
                                         <label class="small mb-1" for="ctitle">Title</label>
@@ -281,8 +281,7 @@
                             cache: false,
                             dataType: 'json', 
                             beforeSend: function() {
-                                $("#submit").addClass('hidden');
-                                $("#process").removeClass('hidden');
+                                showProcessing('submit'); //show processing before form success
                             },
                             success: function(result) { 
                                 if(result.response_msg === 'success') { 
@@ -292,17 +291,12 @@
                                     $("#close_model").trigger('click');
                                     $("#add_cat")[0].reset();
                                 }else if(result.response_msg === 'error') {  
-                                    $(".regerror").html(result.message);
-                                    $(".regerror").addClass('error');
-                                    $(".regerror").removeClass('hidden');
+                                    showErrorMessage(result.message); //show error message
                                     setTimeout(function() {
-                                        $(".regerror").html('');
-                                        $(".regerror").addClass('hidden');
-                                        $(".regerror").removeClass('error');
+                                        removeErrorAttr(); //remove error with attr
                                     }, 3000);
                                 } 
-                                $("#submit").removeClass('hidden');
-                                $("#process").addClass('hidden');
+                                hideProcessing('submit'); //hide processing after form success
                             }
                         });
                     }

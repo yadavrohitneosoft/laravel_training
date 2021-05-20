@@ -91,8 +91,8 @@
                     <!-- Modal body start-->
                         <div class="modal-body modalBody" id="">
                             <div class="card-body loginform">
-                                <p class="regerror text-center hidden"></p>
-                                <p class="regsuccess text-center hidden" style="color:green"></p>
+                                <p class="formError text-center hidden"></p>
+                                <p class="formSuccess text-center hidden" style="color:green"></p>
                                 <form action="javascript:void(0);" id="add_user" class="" method="post" name="login" autocomplete="off">
                                     <div class="form-group mb0">
                                         <label class="small mb-1" for="f_name">First Name</label>
@@ -409,30 +409,23 @@
                     data: formData,
                     dataType: 'json', 
                     beforeSend: function() {
-                        $("#submit").addClass('hidden');
-                        $("#process").removeClass('hidden');
+                        showProcessing('submit'); //show processing before form success
                     },
                     success: function(result) { 
                         if(result.response_msg === 'success') { 
                             swal(result.message, { icon:"success", timer: 2000 }); 
                             $('#dataTable').DataTable().draw('full-hold'); 
-                            $("#add_user")[0].reset();
-                            $(".regsuccess").removeClass('hidden');
-                            $('.regsuccess').html(result.message); 
+                            $("#add_user")[0].reset(); 
                             $("#UserAddModel").modal('toggle');
-                            $("#close_model").trigger('click');     
+                            $("#close_model").trigger('click');
+                            showSuccessMessage(result.message); //show success message    
                         }else if(result.response_msg === 'error') {  
-                            $(".regerror").html(result.message);
-                            $(".regerror").addClass('error');
-                            $(".regerror").removeClass('hidden');
+                            showErrorMessage(result.message); //show error message
                             setTimeout(function() {
-                                $(".regerror").html('');
-                                $(".regerror").addClass('hidden');
-                                $(".regerror").removeClass('error');
+                                removeErrorAttr(); //remove error with attr
                             }, 3000);
                         } 
-                        $("#submit").removeClass('hidden');
-                        $("#process").addClass('hidden');
+                        hideProcessing('submit'); //hide processing after form success
                     }
                 });
             }

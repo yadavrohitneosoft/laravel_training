@@ -20,9 +20,10 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4"><img src="https://www.neosofttech.com/sites/all/themes/neosoft2017/images/neosoft.svg" style="height: 50px;"></h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4"><img src="{{ asset('images/neosoft.svg') }}" style="height: 50px;"></h3></div>
                                     <div class="card-body loginform">
-                                        <p class="loginerror"></p>
+                                        <p class="formError text-center hidden"></p>
+                                        <p class="formSuccess text-center hidden"></p>
                                         <form action="javascript:void(0);" id="login" class="" method="post" name="login" autocomplete="off">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputEmailAddress">Email</label>
@@ -105,31 +106,26 @@
             }
             function login(){
                 var formData = $("#login").serialize();
-                var url_ = "{{ url('/post_login') }}"; 
                 //calling ajaxHeader() function to generate CSRF Token
                 ajaxHeader();
                 $.ajax({
-                    url: url_,
+                    url: "{{ url('/post_login') }}",
                     type: "POST",
                     data: formData,
                     dataType: 'json', 
                     beforeSend: function() {
-                        $("#submit").addClass('hidden');
-                        $("#process").removeClass('hidden');
+                        showProcessing('submit'); //show processing before form success
                     },
                     success: function(result) {  
                         if(result.response_msg === 'success') {
                             window.location.replace(baseUrl + result.data.redirect_url);
                         }else if(result.response_msg === 'error') { 
-                            $(".loginerror").html(result.message);
-                            $(".loginerror").addClass('error');
+                            showErrorMessage(result.message);
                             setTimeout(function() {
-                                    $(".loginerror").html('');
-                                    $(".loginerror").removeClass('error');
-                                }, 3000);
+                                removeErrorAttr(); //remove error with attr
+                            }, 2000);
                         }   
-                        $("#submit").removeClass('hidden');
-                        $("#process").addClass('hidden');
+                        hideProcessing('submit'); //hide processing after form success
                     }
                 });
             }

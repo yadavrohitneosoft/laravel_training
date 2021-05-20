@@ -1,6 +1,6 @@
 <div class="card-body loginform">
-    <p class="regerror text-center hidden"></p>
-    <p class="regsuccess text-center hidden" style="color:green"></p>
+    <p class="formError text-center hidden"></p>
+    <p class="formSuccess text-center hidden" style="color:green"></p>
     <form action="javascript:void(0);" id="edit_prod" class="" method="post" autocomplete="off">
     <input class="form-control fs12" name="pid" value="{{$info['id']}}"  type="hidden"/>
         <div class="form-group mb0">
@@ -59,8 +59,7 @@
                         data: formData,
                         dataType: 'json', 
                         beforeSend: function() {
-                            $("#submit_edit").addClass('hidden');
-                            $("#process_edit").removeClass('hidden');
+                            showProcessing('update'); //show processing before form success
                         },
                         success: function(result) { 
                             if(result.response_msg === 'success') { 
@@ -69,17 +68,12 @@
                                 $("#EditProductModel").modal('toggle');
                                 $("#close_model_edit").trigger('click');
                             }else if(result.response_msg === 'error') {  
-                                $(".regerror").html(result.message);
-                                $(".regerror").addClass('error');
-                                $(".regerror").removeClass('hidden');
+                                showErrorMessage(result.message); //show error message
                                 setTimeout(function() {
-                                    $(".regerror").html('');
-                                    $(".regerror").addClass('hidden');
-                                    $(".regerror").removeClass('error');
+                                    removeErrorAttr(); //remove error with attr
                                 }, 3000);
-                            } 
-                            $("#submit_edit").removeClass('hidden');
-                            $("#process_edit").addClass('hidden');
+                            }  
+                            hideProcessing('update'); //hide processing after form success
                         }
                     });
                 }

@@ -109,12 +109,8 @@ class CategoryController extends Controller
         if($isValid->fails()) { 
             return $this->errorResponse($isValid->messages()->first(), 202);  
         }else{    
-            $update = Category::where('id',$id)->update(array('title' => $c_title));  
-            if($update){
-                return $this->successResponse($this->data, 'Category updated successfully!', 200);
-            }else{
-                return $this->errorResponse('Something went wrong', 202); 
-            };             
+            $update = Category::where('id',$id)->update(array('title' => $c_title));
+            return $this->successResponse($this->data, 'Category updated successfully!', 200);             
         }
     }
 

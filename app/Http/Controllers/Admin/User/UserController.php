@@ -134,12 +134,8 @@ class UserController extends Controller
                 'lastname' => $lname,
                 'user_type' => $utype,
                 'password' => $password
-            ));  
-            if($update){ 
-                return $this->successResponse($this->data, 'Account updated successfully!', 200);
-            }else{
-                return $this->errorResponse('Something went wrong', 202); 
-            }
+            ));   
+            return $this->successResponse($this->data, 'Account updated successfully!', 200); 
         }
     }
  
