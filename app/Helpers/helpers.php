@@ -25,6 +25,11 @@ function removeSession($arrContent = []){
     Session::flush('admin_session'); 
 }
 
+//generate otp
+function createOTP(){
+    return mt_rand(10000,99999); //generate 5 digit random number
+}
+
 //debugging the output
 function pa($array = []){
     echo "<pre>";

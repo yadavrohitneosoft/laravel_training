@@ -37,7 +37,7 @@ class LoginController extends Controller
                     return $this->errorResponse('Your account is InActive, Please contact to administrator', 202); 
                 }else{
                     $expired_time = Carbon::now()->addMinutes(10); //otp will expire in 10 minutes
-                    $otp = mt_rand(1,100000); //generate 5 digit OTP
+                    $otp = createOTP(); //generate 5 digit OTP
                     $update = User::where('id',$find->id)->update(['otp'=>$otp, 'otp_expired_at'=>$expired_time]);
                     //send email for OTP verification
                     $subject = 'OTP for login session | Stock Management System';
@@ -155,7 +155,7 @@ class LoginController extends Controller
             $find = User::where('id', $request->input('uid'))->first(); 
             if($find){
                 $expired_time = Carbon::now()->addMinutes(10); //otp will expire in 10 minutes
-                $otp = mt_rand(1,100000); //generate 5 digit OTP
+                $otp = createOTP(); //generate 5 digit OTP
                 //update columns after resend otp 
                 $update = User::where('id',$find->id)->update(['otp'=>$otp, 'otp_expired_at'=>$expired_time]);
                 //send email for OTP verification
