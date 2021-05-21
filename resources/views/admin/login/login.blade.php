@@ -24,7 +24,7 @@
                                     <div class="card-body loginform">
                                         <p class="formError text-center hidden"></p>
                                         <p class="formSuccess text-center hidden"></p>
-                                        <form action="javascript:void(0);" id="login" class="" method="post" name="login" autocomplete="off">
+                                        <form action="javascript:void(0);" id="login" class="" method="post" name="login" autocomplete="off" style="margin-top: 15px;">
                                             <div class="form-group">
                                                 <label class="small mb-1" for="inputEmailAddress">Email</label>
                                                 <input class="form-control fs12" name="email" id="inputEmailAddress" type="text" placeholder="Enter Email" onkeypress="removeError()" />

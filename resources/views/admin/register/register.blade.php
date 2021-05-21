@@ -26,7 +26,7 @@
                                     <div class="card-body loginform">
                                         <p class="formError text-center hidden"></p>
                                         <p class="formSuccess text-center hidden"></p>
-                                        <form action="javascript:void(0);" id="register" class="" method="post" name="login" autocomplete="off">
+                                        <form action="javascript:void(0);" id="register" class="" method="post" name="login" autocomplete="off" style="margin-top: 15px;">
                                             <div class="form-group mb0">
                                                 <label class="small mb-1" for="f_name">First Name</label>
                                                 <input class="form-control fs12" name="f_name" id="f_name" type="text" placeholder="Enter Firstname" onkeypress="removeError()" />

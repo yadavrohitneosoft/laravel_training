@@ -4767,7 +4767,7 @@
     }
     
     .loginform {
-        padding: 0.7rem 1.25rem;
+        padding: 0.7rem 1.25rem 0rem 1.25rem;
     }
     
     .card-title {
@@ -10427,9 +10427,9 @@
     }
     
     .error {
-        font-size: 12px;
+        font-size: 10px;
         color: #ff0000;
-        /* position: absolute; */
+        position: absolute;
     }
     
     .loginerror {
@@ -10438,11 +10438,14 @@
         color: #ff0000;
     }
 
-    .formError {
-        margin-top:1rem !important; 
-        margin-bottom: 0px !important;
+    .formError { 
+        /* margin-top:1rem !important; 
+        margin-bottom: 0px !important; */
+        font-size:12px; 
         text-align: center;
         color: #ff0000;
+        width: 90%;
+        position: absolute;
 
     }
     
@@ -10628,17 +10631,14 @@
         opacity:0.5 !important;
     }
 
-    .mb0{margin-bottom:0rem !important}
+    .mb0{margin-bottom:8px !important;}
     .security{-webkit-text-security: disc;}
     .sorting_disabled{font-size: 13px !important;}
     #dataTable_info{font-size: 13px !important;}
     .paginate_button{font-size: 13px !important;}
     .readonly{cursor: not-allowed;}
-    .dataTables_scrollBody td{
-        font-size: 12px !important;
-    }
-    table.dataTable tbody th, table.dataTable tbody td {
-        padding: 5px 8px !important;
-    }
-    .formSuccess{color:green;margin-top:1rem !important; margin-bottom: 0px !important;}
+    .dataTables_scrollBody td{font-size: 12px !important;}
+    table.dataTable tbody th, table.dataTable tbody td {padding: 5px 8px !important;}
+    .formSuccess{color:green;font-size: 12px;text-align: center; width: 90%;position: absolute;}
     .regerror{color:red;margin-top:1rem !important; margin-bottom: 0px !important;}
+    .please_w{margin-top: 22px; font-size: 12px;}

@@ -143,13 +143,13 @@ function hideSuccessMessage(){
 function showErrorMessage(message=''){
     $(".formError").removeClass('hidden');
     $(".formError").html(message);
-    $(".formError").addClass('error');
+    //$(".formError").addClass('error');
 }
 
 //function to remove error class and message
 function removeErrorAttr(){
     $(".formError").addClass('hidden');
     $(".formError").html('');
-    $(".formError").removeClass('error');
+    //$(".formError").removeClass('error');
 }
  

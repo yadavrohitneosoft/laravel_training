@@ -51,7 +51,7 @@
                                     </div>
                                     <div class="card-body hidden" id="otpSuccess">
                                         <p class="formSuccess text-center ">OTP Validation Successfull</p>
-                                        <p class="text-center ">Please wait...</p>
+                                        <p class="text-center please_w">Please wait...</p>
                                     </div>
                                     <div class="card-footer text-center">
                                         <div class="small" style="color: gray"><a href="{{url('/logout')}}">Logout</a></div>
