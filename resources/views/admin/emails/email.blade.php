@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Stock Management Portal</title>
+    <title>Data Management Portal</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -161,7 +161,7 @@
                     </tr> -->
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">Regards,<br>Stock Management Team </p>
+                            <p style="margin: 0;">Regards,<br>Data Management Team </p>
                         </td>
                     </tr>
                 </table>

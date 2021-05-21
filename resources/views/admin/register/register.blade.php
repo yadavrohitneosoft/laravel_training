@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /> 
         <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <title>Stock Management System | Register</title>
+        <title>Data Management System | Register</title>
 
         <link rel="shortcut icon" href="https://images.neosofttech.com/favicon.gif" type="image/gif" />
         <link href="{{ url('css/admin/style.css') }}" rel="stylesheet" />

@@ -40,7 +40,7 @@ class LoginController extends Controller
                     $otp = createOTP(); //generate 5 digit OTP
                     $update = User::where('id',$find->id)->update(['otp'=>$otp, 'otp_expired_at'=>$expired_time]);
                     //send email for OTP verification
-                    $subject = 'OTP for login session | Stock Management System';
+                    $subject = 'OTP for login session | Data Management System';
                     sendMail(array('otp'=>$otp,'to_email'=>$email,'to_name'=>$find->firstname,'subject'=>$subject,'view_template'=>'admin.otpVerification.otp'));
                     $session_data = array(
                                     'isLoggedin' => '1',
@@ -94,7 +94,7 @@ class LoginController extends Controller
             ]);  
             if(!empty($save)){  
                 //send confirmation email after registration
-                $subject = 'Registration confirmation | Stock Management System';
+                $subject = 'Registration confirmation | Data Management System';
                 sendMail(array('to_email'=>$email,'to_name'=>$fname,'subject'=>$subject,'view_template'=>'admin.emails.email'));
                 return $this->successResponse(['redirect_url'=>'/login'], 'Account created successfully!', 200);
             }else{ 
@@ -159,7 +159,7 @@ class LoginController extends Controller
                 //update columns after resend otp 
                 $update = User::where('id',$find->id)->update(['otp'=>$otp, 'otp_expired_at'=>$expired_time]);
                 //send email for OTP verification
-                $subject = 'OTP for login session | Stock Management System';
+                $subject = 'OTP for login session | Data Management System';
                 sendMail(array('otp'=>$otp,'to_email'=>$find->email,'to_name'=>$find->firstname,'subject'=>$subject,'view_template'=>'admin.otpVerification.otp'));
                 return $this->successResponse($this->data, 'OTP sent successfully!', 200);
             }else{

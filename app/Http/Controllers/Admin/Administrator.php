@@ -31,7 +31,7 @@ class Administrator extends Controller
 
     //index
     public function index(){ 
-        $this->data['title'] = 'Stock Management System | Login';
+        $this->data['title'] = 'Data Management System | Login';
         //passing data to view by with method
         return view('admin.login.login')->with('arrContent', $this->data);
     }

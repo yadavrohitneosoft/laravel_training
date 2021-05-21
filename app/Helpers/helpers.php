@@ -42,7 +42,7 @@ function sendMail($arrContent = []){
     Mail::send($arrContent['view_template'], $arrContent, function($message) use ($arrContent) {
         $message->to($arrContent['to_email'], $arrContent['to_name'])
         ->subject($arrContent['subject']);
-        $message->from('no-reply@neosoftmail.com','Stock Management Portal');
+        $message->from('no-reply@neosoftmail.com','Data Management Portal');
     }); 
 }
 
