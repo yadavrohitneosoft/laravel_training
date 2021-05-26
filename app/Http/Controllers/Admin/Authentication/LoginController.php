@@ -7,7 +7,8 @@ use App\Model\AdminModel;
 use Session,DB; 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash; 
-use App\Model\UserModel as User;  
+use App\Model\UserModel as User; 
+use Illuminate\Support\Str; 
 
 class LoginController extends Controller
 {   
@@ -38,7 +39,8 @@ class LoginController extends Controller
                 }else{
                     $expired_time = Carbon::now()->addMinutes(10); //otp will expire in 10 minutes
                     $otp = createOTP(); //generate 5 digit OTP
-                    $update = User::where('id',$find->id)->update(['otp'=>$otp, 'otp_expired_at'=>$expired_time]);
+                    $token = Str::random(50); //update token while login
+                    $update = User::where('id',$find->id)->update(['remember_token'=>$token, 'otp'=>$otp, 'otp_expired_at'=>$expired_time]);
                     //send email for OTP verification
                     $subject = 'OTP for login session | Data Management System';
                     sendMail(array('otp'=>$otp,'to_email'=>$email,'to_name'=>$find->firstname,'subject'=>$subject,'view_template'=>'admin.otpVerification.otp'));
@@ -49,7 +51,8 @@ class LoginController extends Controller
                                     'firstname' => $find->firstname,
                                     'lastname' => $find->lastname,
                                     'email' => $find->email,
-                                    'user_role' => $find->user_type
+                                    'user_role' => $find->user_type,
+                                    'token' => $find->remember_token
                                 ); 
                     setSession($session_data); //set session 
                     return $this->successResponse(['redirect_url'=>'/otp_verification'], 'Success', 200);
@@ -130,7 +133,8 @@ class LoginController extends Controller
                         'firstname' => $find->firstname,
                         'lastname' => $find->lastname,
                         'email' => $find->email,
-                        'user_role' => $find->user_type
+                        'user_role' => $find->user_type,
+                        'token' => $find->remember_token
                         );
                     Session::put('admin_session', $session_data); //set session again 
                     $update = User::where('id',$find->id)->update(array('otp' => NULL,'otp_expired_at' => NULL)); 

@@ -64,6 +64,9 @@ Route::group(['prefix' => '/manage-users', 'middleware' => 'prevent-back-history
     Route::get('/getUserDetails/{id}','Admin\User\UserController@getUserDetails')->name('editUser');
     Route::get('/changeStatus/{id}', 'Admin\User\UserController@changeUserStatus')->name('changeUserStatus');
     Route::get('/userDetails/{id}', 'Admin\User\UserController@userDetails')->name('userDetails');
+    Route::get('/my-account/{token}', 'Admin\User\UserController@myAccount')->name('myaccount');
+    Route::post('/profile-update', 'Admin\User\UserController@profileUpdate');
+    
     
 });
 
