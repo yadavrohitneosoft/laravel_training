@@ -138,6 +138,18 @@ class UserController extends Controller
             return $this->successResponse($this->data, 'Account updated successfully!', 200); 
         }
     }
+
+    //get user details view 
+    public function userDetails($id=''){ 
+        $find = User::find($id); //find by id(primary key)
+        //$find->getOriginal() will return an array of the original attributes, or pass in a string with the attribute name 
+        $this->data['info'] = $find->getOriginal();  
+        if(!empty($find->getOriginal())){
+            return view('admin.user_management.userDetails',$this->data);
+        }else{
+            return $this->errorResponse('Something went wrong', 202); 
+        }
+    }
  
 
 

@@ -106,8 +106,9 @@
                                     </div>
                                     <div class="form-group mb0">
                                         <label class="small mb-1" for="inputEmailAddress">Email</label>
-                                        <input class="form-control fs12" name="email" id="inputEmailAddress" type="text" placeholder="Enter Email" onkeypress="removeError()" />
+                                        <input class="form-control fs12" name="email" id="inputEmailAddress" onblur="accountCheck();removeError()"  type="text" placeholder="Enter Email"  />
                                         <span class="error" id="err_email"></span>
+                                        <span class="hidden" id="email_exists"></span>
                                     </div>
                                     <div class="form-group mb0">
                                         <label class="small mb-1" for="u_type">Role</label>
@@ -188,11 +189,10 @@
                 {
                     "aTargets": [0], 
                     "mRender": function(data, type, full){
-                        return '<td>#' + full['id'] + '</td>';
+                        return '<td><a onclick="userDetails(this)" href="#userDetails/'+full['id']+'" data-option="/manage-users/userDetails~'+full['id']+'"> #'+full['id']+' <i class="fas fa-angle-right" ></i></a> </td>';
                     }
                 }, 
                 {
-                
                     "aTargets": [6],
                     "width": 100,
                     "className": "text-center", 
@@ -399,6 +399,8 @@
             }else if (password !== cpassword) {
                 $('#err_conf_pass').html('Confirm Password should match.');
                 $('#inputPassword').addClass('errorclass');
+            }else if ($("#email_exists").hasClass('notAllOK')==true) {
+                    return false;
             }else {
                 var formData = $("#add_user").serialize(); 
                 //calling ajaxHeader() function to generate CSRF Token

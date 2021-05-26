@@ -153,3 +153,51 @@ function removeErrorAttr(){
     //$(".formError").removeClass('error');
 }
  
+//check user email
+function accountCheck(){
+    ajaxHeader(); //calling ajaxHeader() function to generate CSRF Token
+    var email = $("#inputEmailAddress").val();
+    $.ajax({
+        type: "POST",
+        url: baseUrl + '/checkUserAccount',
+        data: { 'email': email },
+        cache: false,
+        dataType: 'json',
+        success:function(result){
+            if(result.response_msg === 'error') { 
+                $("#inputEmailAddress").css("border","1px solid #ff0000");
+                $('#email_exists').html(result.message);
+                $('#email_exists').removeClass('hidden'); 
+                $('#email_exists').addClass('notAllOK');
+                $('#email_exists').removeClass('allOK');
+            }else{   
+                $("#inputEmailAddress").css("border","1px solid #ced4da");
+                $('#email_exists').addClass('hidden');
+                $('#email_exists').addClass('allOK');
+                $('#email_exists').removeClass('notAllOK'); 
+            }
+            
+        }
+    })
+}
+
+//user details page
+function userDetails(thisattr){
+    var data = $(thisattr).data('option').split('~'); //console.table(data); 
+    var page = data[0];
+    var uid = data[1]; 
+    ajaxHeader();  //calling ajaxHeader() function to generate CSRF Token
+    $.ajax({
+        type: "get",
+        url: baseUrl+page+'/'+uid, 
+        cache: false,
+        dataType: 'json',
+        success:function(result){
+            if(result.response_msg=='sucess'){
+                loadhtmlView('/manage-users/userDetails/'+uid,'page');
+            }else{
+                console.log('Something went wrong');
+            }
+        }
+    })
+}

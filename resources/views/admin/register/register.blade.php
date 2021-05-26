@@ -39,8 +39,9 @@
                                             </div>
                                             <div class="form-group mb0">
                                                 <label class="small mb-1" for="inputEmailAddress">Email</label>
-                                                <input class="form-control fs12" name="email" id="inputEmailAddress" type="text" placeholder="Enter Email" onkeypress="removeError()" />
+                                                <input class="form-control fs12" name="email" id="inputEmailAddress" type="text" placeholder="Enter Email" onblur="accountCheck();removeError()" />
                                                 <span class="error" id="err_email"></span>
+                                                <span class="hidden" id="email_exists"></span>
                                             </div>
                                             <div class="form-group mb0">
                                                 <label class="small mb-1" for="u_type">Role</label>
@@ -111,6 +112,9 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
         <script src="{{ url('js/admin/scripts.js') }}"></script> 
         <script>
+            
+
+            //registration
             function register() {
                 $("#register").submit(function(event) {
                     event.preventDefault();
@@ -147,6 +151,8 @@
                     }else if (password !== cpassword) {
                         $('#err_conf_pass').html('Confirm Password should match.');
                         $('#inputPassword').addClass('errorclass');
+                    }else if ($("#email_exists").hasClass('notAllOK')==true) {
+                        return false;
                     }else {
                          doRegister();
                     }

@@ -3,7 +3,7 @@
     $(document).ready(function() { 
         var hash = window.location.hash;
         //var hash = window.location.hash;
-        var res = hash.split("/");   
+        var res = hash.split("/");  
         if(res=='#users')
         {
             loadhtmlView('/manage-users','users');
@@ -15,9 +15,9 @@
         if(res=='#products')
         {
             loadhtmlView('/manage-products','products');
-        }
-        if(res=='#updatePassword'){
-            loadhtmlView('/changePassword','page');
+        } 
+        if(res[0]=='#userDetails'){
+            loadhtmlView('/manage-users/userDetails/'+res[1],'page');
         }
  
         $("#layoutSidenav_nav .sb-sidenav a").each(function(){

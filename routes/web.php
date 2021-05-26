@@ -27,6 +27,7 @@ Route::group(['middleware' => 'prevent-back-history'], function() {
     Route::get('/otp_verification', 'Admin\Authentication\LoginController@otp_verification');
     Route::post('/otpVerify', 'Admin\Authentication\LoginController@otpVerify');
     Route::post('/otpResend', 'Admin\Authentication\LoginController@otpResend');
+    Route::post('/checkUserAccount', 'Admin\Authentication\LoginController@checkUserAccount');
 });
 
 //Dashboard Routing
@@ -62,6 +63,8 @@ Route::group(['prefix' => '/manage-users', 'middleware' => 'prevent-back-history
     Route::get('/deleteUser/{id}','Admin\User\UserController@deleteUser')->name('deleteUser');
     Route::get('/getUserDetails/{id}','Admin\User\UserController@getUserDetails')->name('editUser');
     Route::get('/changeStatus/{id}', 'Admin\User\UserController@changeUserStatus')->name('changeUserStatus');
+    Route::get('/userDetails/{id}', 'Admin\User\UserController@userDetails')->name('userDetails');
+    
 });
 
     
