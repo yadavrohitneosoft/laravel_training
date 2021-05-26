@@ -10642,3 +10642,4 @@
     .formSuccess{color:green;font-size: 12px;text-align: center; width: 90%;position: absolute;}
     .regerror{color:red;margin-top:1rem !important; margin-bottom: 0px !important;}
     .please_w{margin-top: 22px; font-size: 12px;}
+    #email_exists{font-size: 11px;color: #ff0000;position: absolute;}

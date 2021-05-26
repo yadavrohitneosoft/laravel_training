@@ -168,6 +168,24 @@ class LoginController extends Controller
         }        
     }
 
+    //user email existance check
+    public function checkUserAccount(Request $request){
+        $email = $request->input('email');
+        $isValid = $this->checkValidator($request->all(), [ 
+            'email' => 'required',
+        ]); 
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202);
+        }else{  
+            $find = User::where('email', $email)->first(); 
+            if($find){ 
+                return $this->errorResponse('An account already exists with this Email ID', 202);
+            }else{
+                return $this->successResponse($this->data, 'No account exists with this Email', 200);
+            }
+        }
+    }
+
 
     
 }
