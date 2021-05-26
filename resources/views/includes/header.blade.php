@@ -15,13 +15,13 @@
     <ul class="navbar-nav ml-auto ml-md-0">
         <li class="nav-item dropdown">
        
-        <a class="nav-link" href="javascript:void()" > Welcome {{$get_SessionData['firstname']}}! </a>
-            <!-- <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome To Admin </a> -->
-            <!-- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown"> -->
-                <!-- <a class="dropdown-item" href="#">Settings</a> -->
+        <!-- <a class="nav-link" href="javascript:void()" > Welcome {{$get_SessionData['firstname']}}! </a> -->
+            <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome {{$get_SessionData['firstname']}}! </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ url('/manage-users/my-account') }}/{{$get_SessionData['token']}}">My Account</a> 
                 <!-- <div class="dropdown-divider"></div>  
                 <a class="dropdown-item" href="{{ url('/logout') }}">Logout</a> -->
-            <!-- </div> -->
+            </div>
         </li>
         <li><a class="btn btn-link order-1 order-lg-0" href="{{ url('/logout') }}" title="logout"><i class="fas fa-sign-out-alt"></i></a></li>
     </ul>

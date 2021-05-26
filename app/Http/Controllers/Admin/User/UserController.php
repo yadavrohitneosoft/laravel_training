@@ -13,6 +13,8 @@ use Yajra\Datatables\Datatables;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;  
 use App\Model\UserModel as User;  
+use Auth;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -150,6 +152,44 @@ class UserController extends Controller
             return $this->errorResponse('Something went wrong', 202); 
         }
     }
+
+    //get user account view 
+    public function myAccount($token=''){ 
+        $find = User::where('remember_token', $token)->first();
+        if(!empty($find)){
+            $this->data['userInfo'] = $find->getOriginal();
+            if(!empty($find->getOriginal())){
+                return view('admin.user_management.userDetails',$this->data);
+            }else{
+                return view('admin.404'); 
+            }
+        }else{
+            return view('admin.404'); 
+        }
+    }
+
+    //profile update
+    public function profileUpdate(Request $request){ 
+        $id = $request->input('uid');
+        $fname = $request->input('fname');
+        $lname = $request->input('lname');
+        $isValid = $this->checkValidator($request->all(), [
+            'uid' => 'required',
+            'fname' => 'required|string|max:50',
+            'lname' => 'required|string|max:50',  
+        ]); 
+        if($isValid->fails()) { 
+            return $this->errorResponse($isValid->messages()->first(), 202);
+        }else{   
+            $update = User::where('id',$id)->update(array(
+                'firstname' => $fname,
+                'lastname' => $lname
+            ));   
+            return $this->successResponse($this->data, 'Account updated successfully!', 200); 
+        }
+    }
+    
+    
  
 
 

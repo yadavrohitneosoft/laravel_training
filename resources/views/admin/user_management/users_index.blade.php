@@ -189,7 +189,7 @@
                 {
                     "aTargets": [0], 
                     "mRender": function(data, type, full){
-                        return '<td><a onclick="userDetails(this)" href="#userDetails/'+full['id']+'" data-option="/manage-users/userDetails~'+full['id']+'"> #'+full['id']+' <i class="fas fa-angle-right" ></i></a> </td>';
+                        return '<td>#'+full['id']+'</td>';
                     }
                 }, 
                 {
@@ -420,7 +420,10 @@
                             $("#add_user")[0].reset(); 
                             $("#UserAddModel").modal('toggle');
                             $("#close_model").trigger('click');
-                            showSuccessMessage(result.message); //show success message    
+                            showSuccessMessage(result.message); //show success message 
+                            setTimeout(function(){
+                                hideSuccessMessage(); //hide success message  
+                            },2000);   
                         }else if(result.response_msg === 'error') {  
                             showErrorMessage(result.message); //show error message
                             setTimeout(function() {
