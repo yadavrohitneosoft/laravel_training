@@ -73,6 +73,15 @@ function showMessage(type, message) {
 
 })(jQuery);
 
+//current time
+function getCurrTime(){
+    setInterval(function(){
+        var date = new Date();
+        var time = date.toLocaleString('en-US', {weekday: 'short',day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true });
+        $(".currTime").html(time);
+    },1000);
+}
+
 
 function removeError() {
     $('.error').html('');

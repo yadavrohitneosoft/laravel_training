@@ -52,7 +52,9 @@ class LoginController extends Controller
                                     'lastname' => $find->lastname,
                                     'email' => $find->email,
                                     'user_role' => $find->user_type,
-                                    'token' => $find->remember_token
+                                    'token' => $find->remember_token,
+                                    'last_login_time' => $this->now,
+                                    'last_login_ip' => $find->last_login_ip
                                 ); 
                     setSession($session_data); //set session 
                     return $this->successResponse(['redirect_url'=>'/otp_verification'], 'Success', 200);
@@ -126,6 +128,8 @@ class LoginController extends Controller
                 if($this->now->lessThan($find->otp_expired_at)){
                     //update otp column after successful otp validation
                     Session::flush(); //remove the previous session
+                    $update = User::where('id',$find->id)->update(array('last_login_time'=>$this->now,'last_login_ip'=>$request->ip(),'otp' => NULL,'otp_expired_at' => NULL));
+                    $date = $this->now->isoFormat('ddd, Do MMMM YYYY, h:mm:ss A'); //Fri, 15th June 2018, 5:34:15 PM
                     $session_data = array(
                         'isLoggedin' => '1',
                         'isOtpVerified' => '1',
@@ -134,10 +138,11 @@ class LoginController extends Controller
                         'lastname' => $find->lastname,
                         'email' => $find->email,
                         'user_role' => $find->user_type,
-                        'token' => $find->remember_token
+                        'token' => $find->remember_token,
+                        'last_login_time' => $date,
+                        'last_login_ip' => $find->last_login_ip
                         );
                     Session::put('admin_session', $session_data); //set session again 
-                    $update = User::where('id',$find->id)->update(array('otp' => NULL,'otp_expired_at' => NULL)); 
                     return $this->successResponse(['redirect_url'=>'/dashboard/index','valid_msg'=>'OTP Validation Successful'], 'Success', 200);
                  }else{
                     return $this->errorResponse('OTP has expired', 202);  

@@ -143,6 +143,7 @@ class UserController extends Controller
 
     //get user details view 
     public function userDetails($id=''){ 
+        auth_check(); 
         $find = User::find($id); //find by id(primary key)
         //$find->getOriginal() will return an array of the original attributes, or pass in a string with the attribute name 
         $this->data['info'] = $find->getOriginal();  
@@ -155,6 +156,7 @@ class UserController extends Controller
 
     //get user account view 
     public function myAccount($token=''){ 
+        auth_check();
         $find = User::where('remember_token', $token)->first();
         if(!empty($find)){
             $this->data['userInfo'] = $find->getOriginal();

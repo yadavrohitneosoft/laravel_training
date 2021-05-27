@@ -20,7 +20,8 @@
                                 <!-- <img src="{{ URL::asset('/images/demo-user.jpg') }}" width="200"  alt="" class="ds__logo profile_logo"> -->
                                 <div class="avatar-upload">
                                     <div class="avatar-edit">
-                                        <input type='file' id="imageUpload" accept=".png, .jpg, .jpeg" />
+                                        <?php $uid = $userInfo['id']; ?>
+                                        <input type='file' id="imageUpload" onchange="uploadPicture('<?php echo $uid; ?>')" />
                                         <label for="imageUpload"></label>
                                     </div>
                                     <div class="avatar-preview">
@@ -80,6 +81,70 @@
     // $("#imageUpload").change(function() {
     //     readURL(this);
     // });
+
+    function uploadPicture(id){
+
+        alert(id);
+         
+            // var formdataNew = new FormData();   
+            // //Total Id Proof 
+            // let TotalIdProof = $('#identity')[0].files.length; 
+            // let idProof = $('#identity')[0];  
+            // for(let i = 0; i < TotalIdProof; i++) {
+            //     formdataNew.append('identity[]', idProof.files[i]);
+            // }
+            // //Total address
+            // let Totaladdress = $('#address')[0].files.length; 
+            // let address = $('#address')[0];  
+            // for(let j = 0; j < Totaladdress; j++) {
+            //     formdataNew.append('address[]', address.files[j]);
+            // }
+            // //Total energy
+            // let Totalenergy = $('#energy')[0].files.length; 
+            // let energy = $('#energy')[0];  
+            // for(let z = 0; z < Totalenergy; z++) {
+            //     formdataNew.append('energy[]', energy.files[z]);
+            // }
+            // let TotalImages = TotalIdProof + Totaladdress + Totalenergy;
+            // formdataNew.append('TotalImages', TotalImages);
+            // formdataNew.append('idTotalImages', TotalIdProof);
+            // formdataNew.append('addTotalImages', Totaladdress); 
+            // formdataNew.append('energyTotalImages', Totalenergy);
+            // formdataNew.append('propID', propID);
+
+            // if(TotalIdProof > 0 || Totaladdress > 0 || Totalenergy > 0){
+            //     $.ajax({
+            //         type: 'post',
+            //         url: baseUrl + '/upload_proof',
+            //         data: formdataNew,
+            //         cache:false,
+            //         contentType: false,
+            //         processData: false,
+            //         dataType: 'json',
+            //         beforeSend: function() {
+            //             $('#proof_pending').removeClass("d-none");
+            //             $('#proof_submit').addClass("d-none");
+            //         },
+            //         success: function(res) {
+            //             $('#proof_pending').addClass("d-none");
+            //             $('#proof_submit').removeClass("d-none");
+            //             if(res.response === 'success'){ 
+            //             $('#identity').val(''); 
+            //             $('#address').val(''); 
+            //             $('#energy').val('');
+            //             statusMesage(res.message, 'success');
+            //             $("#uploadid_add").modal('toggle'); //hide
+            //             $('#cancel_proof').trigger('click'); 
+            //             }else{
+            //             statusMesage(res.message, 'error');
+            //             }
+            //             ajax_Identity_verification(propID);
+            //         }
+            //     });
+            // }else{
+            //     statusMesage('Please select file', 'error');
+            // } 
+    }
 
         //registration
         function profileUpdate() {

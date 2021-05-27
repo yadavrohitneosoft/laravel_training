@@ -4599,6 +4599,7 @@
     .navbar-expand .navbar-nav .nav-link {
         padding-right: 0.5rem;
         padding-left: 0.5rem;
+        font-size: 14px;
     }
     
     .navbar-expand>.container,
