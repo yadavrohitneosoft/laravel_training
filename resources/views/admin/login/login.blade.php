@@ -5,9 +5,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /> 
         <meta name="csrf-token" content="{{ csrf_token() }}" />
-        <title>Data Management System | Login</title>
+        <title>Login | Real Estate Property Management</title>
 
-        <link rel="shortcut icon" href="https://images.neosofttech.com/favicon.gif" type="image/gif" />
+        <link rel="shortcut icon" href="{{ URL::asset('images/logo.png') }}" type="image/gif"  />
         <link href="{{ asset('css/admin/style.css') }}" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js" crossorigin="anonymous"></script>
         <script language="javascript"> var baseUrl = '{{ url('/') }}'; </script>
@@ -20,14 +20,14 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-5">
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
-                                    <div class="card-header"><h3 class="text-center font-weight-light my-4"><img src="{{ asset('images/neosoft.svg') }}" style="height: 50px;"></h3></div>
+                                    <div class="card-header"><h3 class="text-center font-weight-light my-4"><img src="{{ asset('images/logo_prop.png') }}" style="height: 50px;"></h3></div>
                                     <div class="card-body loginform">
                                         <p class="formError text-center hidden"></p>
                                         <p class="formSuccess text-center hidden"></p>
                                         <form action="javascript:void(0);" id="login" class="" method="post" name="login" autocomplete="off" style="margin-top: 15px;">
                                             <div class="form-group">
-                                                <label class="small mb-1" for="inputEmailAddress">Email</label>
-                                                <input class="form-control fs12" name="email" id="inputEmailAddress" type="text" placeholder="Enter Email" onkeypress="removeError()" />
+                                                <label class="small mb-1" for="inputEmailAddress">Username/Email</label>
+                                                <input class="form-control fs12" name="email" id="inputEmailAddress" type="text" placeholder="Enter Username/Email" onkeypress="removeError()" />
                                                 <span class="error" id="err_email"></span>
                                             </div>
                                             <div class="form-group">
@@ -40,14 +40,7 @@
                                                     <i class="fa fa-eye-slash" aria-hidden="true" onclick="show_hide_pass()"></i>
                                                 </span>
                                                 <span class="error" id="err_password"></span>
-                                            </div>
-                                            <!-- <div class="form-group">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input class="custom-control-input" id="rememberPasswordCheck" type="checkbox" />
-                                                    <label class="custom-control-label" for="rememberPasswordCheck">Remember password</label>
-                                                    <span class="errorclass" ></span>
-                                                </div>
-                                            </div> -->
+                                            </div> 
                                             <div class="form-group text-center">
                                                 <!-- <a class="small" href="password.php">Forgot Password?</a> -->
                                                 <button type="submit" id="submit" name="submit" onclick="dologin();" class="btn btn-primary login_submit" href="javascript:void(0)" >Login</button>
@@ -68,7 +61,7 @@
                 <footer class="py-4 bg-light mt-auto">
                     <div class="container-fluid">
                         <div class=" align-items-center small">
-                            <div class="text-muted text-center">Copyright &copy; NeoSOFT - <?php echo date('Y'); ?></div>
+                            <div class="text-muted text-center">Copyright &copy; Real Estate - <?php echo date('Y'); ?></div>
                             <!-- <div>
                                 <a href="#">Privacy Policy</a>
                                 &middot;

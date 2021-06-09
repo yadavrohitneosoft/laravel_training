@@ -3,14 +3,21 @@
 //authentication check
 function auth_check(){
     $get_SessionData = Session::get('admin_session'); 
-    if(!empty($get_SessionData)){ 
-        if($get_SessionData['isOtpVerified'] == 0){
-            return redirect()->to('/login')->send(); 
-        }else{
-            //
-        }   
-    }else{
+    if(empty($get_SessionData)){ 
         //check if session not set or otp not verified then redirect to login
+        return redirect()->to('/login')->send();
+    }else if(!empty($get_SessionData) && $get_SessionData['user_role']==2){
+        return redirect()->to('/login')->send();
+    }
+}
+
+//site auth check 
+function site_auth_check(){
+    $get_SessionData = Session::get('admin_session'); 
+    if(empty($get_SessionData)){ 
+        //check if session not set or otp not verified then redirect to login
+        //return redirect()->to('/login')->send();
+    }else if(!empty($get_SessionData) && $get_SessionData['user_role']==1){
         return redirect()->to('/login')->send();
     }
 }
@@ -24,11 +31,7 @@ function setSession($arrContent = []){
 function removeSession($arrContent = []){
     Session::flush('admin_session'); 
 }
-
-//generate otp
-function createOTP(){
-    return mt_rand(10000,99999); //generate 5 digit random number
-}
+ 
 
 //debugging the output
 function pa($array = []){
@@ -37,13 +40,15 @@ function pa($array = []){
     exit;
 }
 
-//send emails
-function sendMail($arrContent = []){  
-    Mail::send($arrContent['view_template'], $arrContent, function($message) use ($arrContent) {
-        $message->to($arrContent['to_email'], $arrContent['to_name'])
-        ->subject($arrContent['subject']);
-        $message->from('no-reply@neosoftmail.com','Data Management Portal');
-    }); 
+//store image
+function imageStore($file = [], $uploadData = []){
+    $fileNameWithExtension = $file->getClientOriginalName(); //get file name with extension
+    $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME); //filename
+    $getExtension = $file->getClientOriginalExtension(); //get file extension
+    $fileNameToStore = time().'_'.uniqid().'.'.$getExtension; //change final image name
+    $finalName = str_replace(' ','',$fileNameToStore); //remove space in name
+    Storage::disk('public')->put($uploadData['destinationPath'].$finalName, fopen($file, 'r+')); //store in disk
+    return array('ImageName' => $finalName);
 }
 
 

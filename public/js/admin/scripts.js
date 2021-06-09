@@ -38,6 +38,20 @@ function loadhtmlView(page, pageType = '') {
     });
 }
 
+function manage_prop_detail(attr, id) { 
+    const page = '/manage-property/property-detail';
+    ajaxHeader();
+    $.ajax({
+        type: "POST",
+        data: { "id": id },
+        url: baseUrl + page,
+        cache: 'FALSE', 
+        success: function(html) {  
+            $('.main_site_data').html(html);
+        }
+    });
+}
+
 function showMessage(type, message) {
     //$("div.success").fadeIn(300).delay(50000000).fadeOut(400);
     var htmlAlert = '<div class="alert alert-' + type + '">' + message + '</div>';

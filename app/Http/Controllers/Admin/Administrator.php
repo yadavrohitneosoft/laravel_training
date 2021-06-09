@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Model\AdminModel;
+use App\Http\Controllers\Controller; 
 use App\Model\UserModel;
 use View;
 use Session;
@@ -23,17 +22,14 @@ class Administrator extends Controller
     private $now; 
 
     public function __construct(){
-        $this->environment = App::environment();
-        $this->adminModel  = new AdminModel();
+        $this->environment = App::environment(); 
         $this->now = Carbon::now();
         $this->data = [];
     }
 
     //index
-    public function index(){ 
-        $this->data['title'] = 'Data Management System | Login';
-        //passing data to view by with method
-        return view('admin.login.login')->with('arrContent', $this->data);
+    public function index(){  
+        return view('admin.login.login');
     }
 
     //user model data

@@ -21,8 +21,8 @@
                                 <div class="avatar-upload">
                                     <div class="avatar-edit">
                                         <?php $uid = $userInfo['id']; ?>
-                                        <input type='file' id="imageUpload" onchange="uploadPicture('<?php echo $uid; ?>')" />
-                                        <label for="imageUpload"></label>
+                                        <input type='file' id="Image" />
+                                        <label for="Image"><i class="fas fa-pencil-alt" id="ii" title="Change" aria-hidden="true"></i></label>
                                     </div>
                                     <div class="avatar-preview">
                                         <div id="imagePreview" style="background-image: url('{{ URL::asset('/images/demo-user.jpg') }}');">
@@ -78,33 +78,47 @@
     //         reader.readAsDataURL(input.files[0]);
     //     }
     // }
-    // $("#imageUpload").change(function() {
+    // $("#Image").change(function() {
     //     readURL(this);
     // });
-
-    function uploadPicture(id){
-
-        alert(id);
+ 
          
-            // var formdataNew = new FormData();   
-            // //Total Id Proof 
-            // let TotalIdProof = $('#identity')[0].files.length; 
-            // let idProof = $('#identity')[0];  
-            // for(let i = 0; i < TotalIdProof; i++) {
-            //     formdataNew.append('identity[]', idProof.files[i]);
-            // }
-            // //Total address
-            // let Totaladdress = $('#address')[0].files.length; 
-            // let address = $('#address')[0];  
-            // for(let j = 0; j < Totaladdress; j++) {
-            //     formdataNew.append('address[]', address.files[j]);
-            // }
-            // //Total energy
-            // let Totalenergy = $('#energy')[0].files.length; 
-            // let energy = $('#energy')[0];  
-            // for(let z = 0; z < Totalenergy; z++) {
-            //     formdataNew.append('energy[]', energy.files[z]);
-            // }
+        $(document).on('change', '#Image', function(){
+            var uid = '<?php echo $uid; ?>';
+            var name = document.getElementById("Image").files[0].name;
+            var formdata = new FormData();
+            var ext = name.split('.').pop().toLowerCase();
+            if(jQuery.inArray(ext, ['png','jpg','jpeg']) == -1) {
+                alert("Invalid File"); return true;
+            }
+            var oFReader = new FileReader();
+            oFReader.readAsDataURL(document.getElementById("Image").files[0]);
+            var f = document.getElementById("Image").files[0];
+            var fsize = f.size||f.fileSize;
+            if(fsize > 2000000){ //2000KB
+                alert("File should be less than 2MB");
+            }else{
+                formdata.append("Image", document.getElementById('Image').files[0]);
+                formdata.append("uid", uid);
+                ajaxHeader(); //create token
+                $.ajax({
+                    url: baseUrl+"/manage-users/uploadPicture",
+                    method:"POST",
+                    data: formdata,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    responseType:'json',
+                    beforeSend:function(){
+                        $('#uploaded_image').html("<label class='text-success'>Image Uploading...</label>");
+                    },   
+                    success:function(data){
+                        $('#uploaded_image').html(data);
+                    }
+                });
+            }
+        });
+            
             // let TotalImages = TotalIdProof + Totaladdress + Totalenergy;
             // formdataNew.append('TotalImages', TotalImages);
             // formdataNew.append('idTotalImages', TotalIdProof);
@@ -144,7 +158,7 @@
             // }else{
             //     statusMesage('Please select file', 'error');
             // } 
-    }
+    
 
         //registration
         function profileUpdate() {

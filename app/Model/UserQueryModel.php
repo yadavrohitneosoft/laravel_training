@@ -4,15 +4,18 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserModel extends Model
+class UserQueryModel extends Model
 {
-    protected $table = "users"; 
+    protected $table = "users_query"; 
     protected $fillable = [
+        'user_id',
+        'prop_id',
         'name', 
-        'role_id',
         'email',
-        'status',
-        'password',
+        'contact',
+        'message', 
+        'username',
+        'prop_title',  
         'created_at'
     ];
     

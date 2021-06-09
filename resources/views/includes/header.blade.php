@@ -1,5 +1,5 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">NeoSOFT</a>
+    <a class="navbar-brand" href="#">Real Estate</a>
     <button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
     <?php $get_SessionData = Session::get('admin_session'); ?>
     <!-- Navbar Search-->
@@ -14,39 +14,14 @@
     <!-- Navbar -->
     <ul class="navbar-nav ml-auto ml-md-0">
         <li class="nav-item dropdown">
-            <a class="nav-link currTime" href="javascript:void()" id="currTime"></a> 
-        </li>
-        <li class="">
-            <a class="nav-link" >|</a>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link" href="javascript:void()" > Last login: {{$get_SessionData['last_login_time']}} </a> 
-        </li>
-        <li class="">
-            <a class="nav-link" >|</a>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link" href="javascript:void()" > Login IP: {{$get_SessionData['last_login_ip']}} </a> 
-        </li>
-        <li class="">
-            <a class="nav-link" >|</a>
-        </li>
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Welcome {{$get_SessionData['firstname']}}! </a>
-            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="{{ url('/manage-users/my-account') }}/{{$get_SessionData['token']}}">My Account</a> 
-                <!-- <div class="dropdown-divider"></div>  
-                <a class="dropdown-item" href="{{ url('/logout') }}">Logout</a> -->
-            </div>
-        </li>
-        <li><a class="btn btn-link order-1 order-lg-0" href="{{ url('/logout') }}" title="logout"><i class="fas fa-sign-out-alt"></i></a></li>
+            <a class="nav-link" aria-haspopup="true" aria-expanded="false">Hello, {{$get_SessionData['name']}}</a>
+        </li> 
+        <li>
+            <a class="btn btn-link order-1 order-lg-0" href="{{ route('logout') }}" title="logout" onclick="event.preventDefault();document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt"></i></a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form> 
+        </li> 
     </ul>
 </nav>
-
-
-<script>
-$(document).ready(function(){
-    getCurrTime();
-})
-
-</script>
+ 

@@ -1,31 +1,17 @@
 <div class="card-body loginform">
     <p class="formError text-center hidden"></p>
     <p class="formSuccess text-center hidden" style="color:green"></p>
-    <form action="javascript:void(0);" id="update_user" class="" method="post" autocomplete="off">
-    <input name="uid" value="{{$info['id']}}" type="hidden" />
+    <form action="javascript:void(0);" id="update_user" class="" method="post" autocomplete="off" enctype="multipart/form-data">
+    <input name="uid" value="{{$info['id']}}" id="uid" type="hidden" />
         <div class="form-group mb0">
-            <label class="small mb-1" for="f_name_edit">First Name</label>
-            <input class="form-control fs12" name="f_name" id="f_name_edit" value="{{$info['firstname']}}" type="text" placeholder="Enter Firstname" onkeypress="removeError()" />
+            <label class="small mb-1" for="f_name_edit">Name</label>
+            <input class="form-control fs12" name="f_name" id="f_name_edit" value="{{$info['name']}}" type="text" placeholder="Enter Firstname" onkeypress="removeError()" />
             <span class="error" id="err_f_name_edit"></span>
-        </div>
-        <div class="form-group mb0">
-            <label class="small mb-1" for="l_name_edit">Last Name</label>
-            <input class="form-control fs12" name="l_name" id="l_name_edit" value="{{$info['lastname']}}" type="text" placeholder="Enter Lastname" onkeypress="removeError()" />
-            <span class="error" id="err_l_name_edit"></span>
-        </div>
+        </div> 
         <div class="form-group mb0">
             <label class="small mb-1" for="inputEmailAddress_edit">Email</label>
-            <input class="form-control fs12 readonly" name="email" id="inputEmailAddress_edit" value="{{$info['email']}}" type="text" readonly />
-        </div>
-        
-        <div class="form-group mb0">
-            <label class="small mb-1" for="u_type_edit">Role</label>
-            <select class="form-control fs12" name="u_type" id="u_type_edit" onchange="removeError()">
-                <option value="">--Select--</option>
-                <option value="2" <?php if($info['user_type']==2) echo 'selected'; ?> >Admin</option>
-                <option value="3" <?php if($info['user_type']==3) echo 'selected'; ?> >User</option>
-            </select>  
-            <span class="error" id="err_u_type_edit"></span>
+            <input class="form-control fs12" name="email" id="inputEmailAddress_edit" value="{{$info['email']}}" type="text"  />
+            <span class="error" id="err_email"></span>
         </div>
         <div class="form-group">
             <label class="small mb-1" for="inputPassword_edit">New Password</label>
@@ -38,11 +24,15 @@
             </span>
             <span class="error" id="err_password_edit"></span>
         </div> 
+        <div class="form-group mb0">
+            <label class="small mb-1" for="pnearby">Profile Image</label>
+            <input class="form-control fs12" type="file" name="file" id="file" />  
+        </div>
          
         <div class="form-group text-center"> 
             <button type="submit" id="submit_edit" name="submit" onclick="UpdateUser();" class="btn btn-primary login_submit" href="javascript:void(0)" >Update</button>
-            <button  id="process_edit" class="btn btn-primary hidden login_process" href="javascript:void(0)" >Processing...</button>
-            <button type="button" id="close_model_edit" class="btn btn-danger login_submit" data-dismiss="modal">Close</button> 
+            <button type="button" id="process_edit" class="btn btn-primary hidden login_process" href="javascript:void(0)" >Processing...</button>
+            <button type="button" id="close_model_edit" class="btn btn-primary login_submit" data-dismiss="modal">Close</button> 
         </div>
     </form>
 </div>
@@ -52,51 +42,63 @@
                 $("#update_user").submit(function(event) {
                     event.preventDefault();
                     event.stopImmediatePropagation();
-                    var fname = $("#f_name_edit").val();
-                    var lname = $("#l_name_edit").val();
-                    var utype = $("#u_type_edit").val(); 
-                    var password = $("#inputPassword_edit").val();  
+                    var uid = $("#uid").val(); 
+                    //alert(uid); return true;
+                    var fname = $("#f_name_edit").val(); 
+                    var email = $("#inputEmailAddress_edit").val(); 
+                    var password = $("#inputPassword_edit").val();
+                    var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                      
                     if(fname == '') {
-                        $('#err_f_name_edit').html('Firstname is required.');
+                        $('#err_f_name_edit').html('Name is required.');
                         $('#f_name_edit').addClass('errorclass');
-                    }else
-                     if(lname == '') {
-                        $('#err_l_name_edit').html('Lastname is required.');
-                        $('#l_name_edit').addClass('errorclass');
-                    }else if(utype == '') {
-                        $('#err_u_type_edit').html('User Type is required.');
-                        $('#u_type_edit').addClass('errorclass');
+                    }else if(email == '') {
+                        $('#err_email').html('Email is required.');
+                        $('#inputEmailAddress_edit').addClass('errorclass');
+                    }else if(!regex.test(email)){
+                            $('#err_email').html('Email is invalid.');
+                            $('#inputEmailAddress').addClass('errorclass');
                     }else { 
-                        doUpdate();
+                        var formData = new FormData();
+                        let totalImage = $('#file')[0].files.length; 
+                        let profileImage = $('#file')[0];
+                        for(let i = 0; i < totalImage; i++) {
+                            formData.append('files[]', profileImage.files[i]);
+                        } 
+                        formData.append('totalImage', totalImage);
+                        formData.append('f_name', fname);
+                        formData.append('email', email);
+                        formData.append('password', password);
+                        formData.append('uid', uid); 
+                        ajaxHeader();
+                            $.ajax({
+                                url: "{{ url('manage-users/do_update_user') }}",
+                                type: "POST",
+                                data: formData,
+                                cache:false,
+                                contentType: false,
+                                processData: false,
+                                dataType: 'json', 
+                                beforeSend: function() {
+                                    showProcessing('update'); //show processing before form success
+                                },
+                                success: function(result) { 
+                                    if(result.response_msg === 'success') { 
+                                        swal(result.message, { icon:"success", timer: 2000 }); 
+                                        $('#dataTable').DataTable().draw('full-hold'); 
+                                        $("#UserModel").modal('toggle');
+                                        $("#close_model_edit").trigger('click');
+                                    }else if(result.response_msg === 'error') {  
+                                        showErrorMessage(result.message); //show error message
+                                        setTimeout(function() {
+                                            removeErrorAttr(); //remove error with attr
+                                        }, 3000);
+                                    }  
+                                    hideProcessing('update'); //hide processing after form success
+                                }
+                            });
                     }
                 });
             }
-            function doUpdate(){
-                var formData = $("#update_user").serialize(); 
-                //calling ajaxHeader() function to generate CSRF Token
-                ajaxHeader();
-                $.ajax({
-                    url: "{{ url('manage-users/do_update_user') }}",
-                    type: "POST",
-                    data: formData,
-                    dataType: 'json', 
-                    beforeSend: function() {
-                        showProcessing('update'); //show processing before form success
-                    },
-                    success: function(result) { 
-                        if(result.response_msg === 'success') { 
-                            swal(result.message, { icon:"success", timer: 2000 }); 
-                            $('#dataTable').DataTable().draw('full-hold'); 
-                            $("#UserModel").modal('toggle');
-                            $("#close_model_edit").trigger('click');
-                        }else if(result.response_msg === 'error') {  
-                            showErrorMessage(result.message); //show error message
-                            setTimeout(function() {
-                                removeErrorAttr(); //remove error with attr
-                            }, 3000);
-                        }  
-                        hideProcessing('update'); //hide processing after form success
-                    }
-                });
-            }
+            
         </script>

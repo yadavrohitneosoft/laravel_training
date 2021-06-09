@@ -39,58 +39,16 @@ class UserController extends Controller
     //get user details
     public function getUsers(Request $request){ 
         $uid = $request->input('userId');
-        $arr = [$uid,'1'];
-        $query = User::select('id', DB::raw("concat(firstname,' ',lastname) as fullname"), 'email', DB::raw("case when user_type='2' then 'Admin' when user_type='3' then 'User' else '' end as urole"), DB::raw("case when status='1' then 'Active' else 'InActive' end as ustatus"), DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d') as cr_date, 'remember_token'") )
+        $arr = [$uid];
+        $baseImage = url('/uploads/user_profile.png');
+        $query = User::select('id', 'name', 'email', DB::raw("case when role_id='2' then 'Customer' when role_id='1' then 'Admin' else '' end as urole"),'image', DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d') as cr_date") )
             ->where([ ['deleted_at',NULL] ])
-            ->whereNotIn('id',$arr)
+            ->whereNotIn('id',$arr) 
+            // ->whereNotIn('role_id',[1]) 
             ->orderBy('id','DESC')
             ->get();  
         $tableData = Datatables::of($query)->make(true);  
         return $tableData; 
-    }
-
-    //add users
-    public function addUser(Request $request){ 
-        $fname = $request->input('f_name');
-        $lname = $request->input('l_name');
-        $email = $request->input('email');
-        $utype = $request->input('u_type');
-        $password = Hash::make($request->input('password')); 
-        $isValid = $this->checkValidator($request->all(), [
-            'f_name' => 'required|string|max:50',
-            'l_name' => 'required|string|max:50', 
-            'email' => 'required|email|unique:users',
-            'u_type' => 'required',
-            'password' => 'required|min:6'
-        ]); 
-        if($isValid->fails()) { 
-            return $this->errorResponse($isValid->messages()->first(), 202); 
-        }else{   
-            $save = User::create([
-                'firstname' => $fname,
-                'lastname' => $lname,
-                'email' => $email,
-                'user_type' => $utype,
-                'password' => $password,
-                'status' => '1',
-                'created_at' => $this->now
-            ]);  
-            if(!empty($save)){  
-                return $this->successResponse($this->data, 'User created successfully!', 200);
-            }else{
-                return $this->errorResponse('Something went wrong', 202); 
-            }
-        }
-    }
-
-    //change user status
-    public function changeUserStatus($id=0){
-        $update = User::where('id', '=', $id)->update( array('status' => DB::raw("case when status='1' then '0' else '1' end")) ); 
-        if($update){ 
-            return $this->successResponse($this->data, 'Status changed successfully!', 200);
-        }else{
-            return $this->errorResponse('Something went wrong', 202); 
-        }
     }
 
     //get user details while updating
@@ -99,56 +57,7 @@ class UserController extends Controller
         //$find->getOriginal() will return an array of the original attributes, or pass in a string with the attribute name 
         $this->data['info'] = $find->getOriginal();  
         if(!empty($find->getOriginal())){
-            return $this->successResponse(['body'=>view('admin.user_management.ajaxEditDetails',$this->data)->render()], 'Product updated successfully!', 200);
-        }else{
-            return $this->errorResponse('Something went wrong', 202); 
-        }
-    }
-
-    //delete user
-    public function deleteUser($id=0){
-        $delete = User::where('id',$id)->update(array('deleted_at' => $this->now));
-        if($delete){ 
-            return $this->successResponse($this->data, 'User has been deleted successfully!', 200);
-        }else{
-            return $this->errorResponse('Something went wrong', 202); 
-        }
-    } 
-
-    //update user
-    public function updateUser(Request $request){
-        $id = $request->input('uid');
-        $fname = $request->input('f_name');
-        $lname = $request->input('l_name');
-        $utype = $request->input('u_type');
-        $password = Hash::make($request->input('password')); 
-        $isValid = $this->checkValidator($request->all(), [
-            'uid' => 'required',
-            'f_name' => 'required|string|max:50',
-            'l_name' => 'required|string|max:50',  
-            'u_type' => 'required', 
-        ]); 
-        if($isValid->fails()) { 
-            return $this->errorResponse($isValid->messages()->first(), 202);
-        }else{   
-            $update = User::where('id',$id)->update(array(
-                'firstname' => $fname,
-                'lastname' => $lname,
-                'user_type' => $utype,
-                'password' => $password
-            ));   
-            return $this->successResponse($this->data, 'Account updated successfully!', 200); 
-        }
-    }
-
-    //get user details view 
-    public function userDetails($id=''){ 
-        auth_check(); 
-        $find = User::find($id); //find by id(primary key)
-        //$find->getOriginal() will return an array of the original attributes, or pass in a string with the attribute name 
-        $this->data['info'] = $find->getOriginal();  
-        if(!empty($find->getOriginal())){
-            return view('admin.user_management.userDetails',$this->data);
+            return $this->successResponse(['body'=>view('admin.user_management.ajaxEditDetails',$this->data)->render()], 'Data retrieved successfully!', 200);
         }else{
             return $this->errorResponse('Something went wrong', 202); 
         }
@@ -170,25 +79,88 @@ class UserController extends Controller
         }
     }
 
-    //profile update
-    public function profileUpdate(Request $request){ 
+    //profile update 
+    public function updateUser(Request $request){
         $id = $request->input('uid');
-        $fname = $request->input('fname');
-        $lname = $request->input('lname');
-        $isValid = $this->checkValidator($request->all(), [
-            'uid' => 'required',
-            'fname' => 'required|string|max:50',
-            'lname' => 'required|string|max:50',  
-        ]); 
+        $fname = $request->input('f_name');
+        $email = $request->input('email');
+        $pass =  $request->input('password');
+        $password = Hash::make($pass); 
+        $find = User::find($id); 
+        $uemail = $find->getOriginal('email');
+        $arr = [];
+        if($uemail === $email){
+            $arr = [
+                'uid' => 'required',
+                'f_name' => 'required|string|max:50',   
+            ];  
+        }else{
+            $arr = [
+                'uid' => 'required',
+                'f_name' => 'required|string|max:50',
+                'email' => 'required|unique:users',   
+            ];
+        }
+        $isValid = $this->checkValidator($request->all(), $arr); 
         if($isValid->fails()) { 
             return $this->errorResponse($isValid->messages()->first(), 202);
-        }else{   
-            $update = User::where('id',$id)->update(array(
-                'firstname' => $fname,
-                'lastname' => $lname
-            ));   
-            return $this->successResponse($this->data, 'Account updated successfully!', 200); 
+        }else{  
+            $finalName = ''; 
+            $destinationPath = '/uploads/user_images/'.$id.'/'; 
+            if($request->hasFile('files')){ //check file 
+                foreach($request->File('files') as $image){
+                    $fileNameWithExtension = $image->getClientOriginalName(); //get file name with extension
+                    $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME); //filename
+                    $getExtension = $image->getClientOriginalExtension(); //get file extension
+                    $fileNameToStore = time().'_'.uniqid().'.'.$getExtension; //change final image name
+                    $finalName = str_replace(' ','',$fileNameToStore); //remove space in name
+                    $image->move(public_path().$destinationPath, $finalName); //move file to destination
+                }
+            } 
+            $data_update = [];
+            if($pass != ''){
+                $data_update = array(
+                    'name' => $fname,
+                    'email' => $email,
+                    'image' => $finalName,
+                    'password' => $password
+                ); 
+            }else{
+                $data_update = array(
+                    'name' => $fname,
+                    'email' => $email,
+                    'image' => $finalName
+                ); 
+            }
+            $update = User::where('id',$id)->update($data_update);   
+            return $this->successResponse($this->data, 'Profile Updated Successfully!', 200); 
         }
+    }
+
+    //upload picture
+    public function uploadPicture(Request $request){
+        $isValid = $this->checkValidator($request->all(), [
+            'uid' => 'required'  
+        ]); 
+        if($isValid->fails()) {
+            return $this->errorResponse($isValid->messages()->first(), 202);
+        }else{
+            $uid = $request->input('uid');
+            $destinationPath = '/uploads/user_images/'.$uid.'/';
+            $uploadData = ['destinationPath'=>$destinationPath,'image_name'=>'user_image'];
+            if($request->hasFile('Image')){ //check file
+                $arrImage = imageStore($request->file('Image'), $uploadData);
+                // $test = explode('.', $_FILES["Image"]["name"]);
+                // $ext = end($test);
+                // $name = Str::random(15).time().'.'.$ext; //create random image name
+                pa($arrImage);
+                // $location = './upload/' . $name; 
+                // $update = User::where('id',$uid)->update(array('image' => $name)); 
+                // move_uploaded_file($_FILES["Image"]["tmp_name"], $location); 
+            }else{
+                return $this->errorResponse('Something went wrong', 202);
+            }
+        } 
     }
     
     

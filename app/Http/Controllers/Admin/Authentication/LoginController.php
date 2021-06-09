@@ -34,31 +34,23 @@ class LoginController extends Controller
         $find = User::where('email', $email)->first();  
         if($find){   
             if(Hash::check($pass, $find->password)){
-                if($find->status == 0){
-                    return $this->errorResponse('Your account is InActive, Please contact to administrator', 202); 
-                }else{
-                    $expired_time = Carbon::now()->addMinutes(10); //otp will expire in 10 minutes
-                    $otp = createOTP(); //generate 5 digit OTP
                     $token = Str::random(50); //update token while login
-                    $update = User::where('id',$find->id)->update(['remember_token'=>$token, 'otp'=>$otp, 'otp_expired_at'=>$expired_time]);
-                    //send email for OTP verification
-                    $subject = 'OTP for login session | Data Management System';
-                    sendMail(array('otp'=>$otp,'to_email'=>$email,'to_name'=>$find->firstname,'subject'=>$subject,'view_template'=>'admin.otpVerification.otp'));
+                    $update = User::where('id',$find->id)->update(['remember_token'=>$token]);
                     $session_data = array(
-                                    'isLoggedin' => '1',
-                                    'isOtpVerified' => '0',
+                                    'isLoggedin' => '1', 
                                     'id' => $find->id,
-                                    'firstname' => $find->firstname,
-                                    'lastname' => $find->lastname,
+                                    'name' => $find->name, 
                                     'email' => $find->email,
-                                    'user_role' => $find->user_type,
-                                    'token' => $find->remember_token,
-                                    'last_login_time' => $this->now,
-                                    'last_login_ip' => $find->last_login_ip
+                                    'user_role' => $find->role_id,
+                                    'token' => $find->remember_token, 
                                 ); 
                     setSession($session_data); //set session 
-                    return $this->successResponse(['redirect_url'=>'/otp_verification'], 'Success', 200);
-                }
+                    if( $find->role_id==1){
+                        return $this->successResponse(['redirect_url'=>'/dashboard/index'], 'Success', 200);
+                    }else if($find->role_id==2){
+                        return $this->successResponse(['redirect_url'=>'/property/property-home'], 'Success', 200);
+                    }
+                   
             }else{
                 return $this->errorResponse('Invalid Password', 202); 
             }
@@ -74,14 +66,12 @@ class LoginController extends Controller
 
     //save registration
     public function doRegister(Request $request){  
-        $fname = $request->input('f_name');
-        $lname = $request->input('l_name');
+        $fname = $request->input('f_name'); 
         $email = $request->input('email');
         $utype = $request->input('u_type');
         $password = Hash::make($request->input('password')); 
         $isValid = $this->checkValidator($request->all(), [
-            'f_name' => 'required|string|max:50',
-            'l_name' => 'required|string|max:50', 
+            'f_name' => 'required|string|max:50', 
             'email' => 'required|email|unique:users',
             'u_type' => 'required',
             'password' => 'required|min:6'
@@ -90,91 +80,18 @@ class LoginController extends Controller
             return $this->errorResponse($isValid->messages()->first(), 202);
         }else{   
             $save = User::create([
-                'firstname' => $fname,
-                'lastname' => $lname,
+                'name' => $fname, 
                 'email' => $email,
-                'user_type' => $utype,
+                'role_id' => $utype,
                 'password' => $password, 
                 'created_at' => $this->now
             ]);  
             if(!empty($save)){  
-                //send confirmation email after registration
-                $subject = 'Registration confirmation | Data Management System';
-                sendMail(array('to_email'=>$email,'to_name'=>$fname,'subject'=>$subject,'view_template'=>'admin.emails.email'));
                 return $this->successResponse(['redirect_url'=>'/login'], 'Account created successfully!', 200);
             }else{ 
                 return $this->errorResponse('Something went wrong', 202); 
             }
         }
-    }
-
-    //send OTP after login submit
-    public function otp_verification(Request $request){  
-        return view('admin.login.otpVerify');
-    }
-
-    //verify OTP
-    public function otpVerify(Request $request){ 
-        $isValid = $this->checkValidator($request->all(), [ 
-            'uid' => 'required', 
-            'otp' => 'required'
-        ]); 
-        if($isValid->fails()) { 
-            return $this->errorResponse($isValid->messages()->first(), 202);
-        }else{
-            $find = User::where('id',$request->input('uid'))->first();
-            if($find->otp == $request->input('otp')){  
-                //compare otp expiration time
-                if($this->now->lessThan($find->otp_expired_at)){
-                    //update otp column after successful otp validation
-                    Session::flush(); //remove the previous session
-                    $update = User::where('id',$find->id)->update(array('last_login_time'=>$this->now,'last_login_ip'=>$request->ip(),'otp' => NULL,'otp_expired_at' => NULL));
-                    $date = $this->now->isoFormat('ddd, Do MMMM YYYY, h:mm:ss A'); //Fri, 15th June 2018, 5:34:15 PM
-                    $session_data = array(
-                        'isLoggedin' => '1',
-                        'isOtpVerified' => '1',
-                        'id' => $find->id,
-                        'firstname' => $find->firstname,
-                        'lastname' => $find->lastname,
-                        'email' => $find->email,
-                        'user_role' => $find->user_type,
-                        'token' => $find->remember_token,
-                        'last_login_time' => $date,
-                        'last_login_ip' => $find->last_login_ip
-                        );
-                    Session::put('admin_session', $session_data); //set session again 
-                    return $this->successResponse(['redirect_url'=>'/dashboard/index','valid_msg'=>'OTP Validation Successful'], 'Success', 200);
-                 }else{
-                    return $this->errorResponse('OTP has expired', 202);  
-                }
-            }else{
-                return $this->errorResponse('OTP is Incorrect', 202); 
-            }
-        }        
-    }
-
-    //resend OTP
-    public function otpResend(Request $request){ 
-        $isValid = $this->checkValidator($request->all(), [ 
-            'uid' => 'required',
-        ]); 
-        if($isValid->fails()) { 
-            return $this->errorResponse($isValid->messages()->first(), 202);
-        }else{  
-            $find = User::where('id', $request->input('uid'))->first(); 
-            if($find){
-                $expired_time = Carbon::now()->addMinutes(10); //otp will expire in 10 minutes
-                $otp = createOTP(); //generate 5 digit OTP
-                //update columns after resend otp 
-                $update = User::where('id',$find->id)->update(['otp'=>$otp, 'otp_expired_at'=>$expired_time]);
-                //send email for OTP verification
-                $subject = 'OTP for login session | Data Management System';
-                sendMail(array('otp'=>$otp,'to_email'=>$find->email,'to_name'=>$find->firstname,'subject'=>$subject,'view_template'=>'admin.otpVerification.otp'));
-                return $this->successResponse($this->data, 'OTP sent successfully!', 200);
-            }else{
-                return $this->errorResponse('Something went wrong!', 202); 
-            }
-        }        
     }
 
     //user email existance check

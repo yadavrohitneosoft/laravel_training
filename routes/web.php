@@ -19,14 +19,11 @@ Auth::routes();
 //Auth Routing
 Route::group(['middleware' => 'prevent-back-history'], function() { 
     Route::get('/','Admin\Administrator@index'); 
-    Route::get('/login','Admin\Administrator@index');
+    Route::get('/login','Admin\Administrator@index')->name('login');
     Route::post('/post_login','Admin\Authentication\LoginController@index');
     Route::get('/logout','Admin\Administrator@logout');
     Route::get('/register','Admin\Authentication\LoginController@register');
-    Route::post('/do_register','Admin\Authentication\LoginController@doRegister');
-    Route::get('/otp_verification', 'Admin\Authentication\LoginController@otp_verification');
-    Route::post('/otpVerify', 'Admin\Authentication\LoginController@otpVerify');
-    Route::post('/otpResend', 'Admin\Authentication\LoginController@otpResend');
+    Route::post('/do_register','Admin\Authentication\LoginController@doRegister'); 
     Route::post('/checkUserAccount', 'Admin\Authentication\LoginController@checkUserAccount');
 });
 
@@ -34,40 +31,34 @@ Route::group(['middleware' => 'prevent-back-history'], function() {
 Route::group(['prefix' => '/dashboard', 'middleware' => 'prevent-back-history'], function() {
     Route::get('/index','Admin\Administrator@home')->name('dashboardHome'); 
 });
-//Category Routing
-Route::group(['prefix' => '/manage-category', 'middleware' => 'prevent-back-history'], function() {
-    Route::get('/','Admin\Category\CategoryController@index')->name('categoryHome');
-    Route::get('/getCategories', 'Admin\Category\CategoryController@getCategories')->name('getCategory');
-    Route::post('/add_category', 'Admin\Category\CategoryController@addCategory')->name('addCategory');
-    Route::get('/changeCatStatus/{id}', 'Admin\Category\CategoryController@changeCategoryStatus')->name('changeCategoryStatus');
-    Route::get('/deleteCategory/{id}','Admin\Category\CategoryController@deleteCategory')->name('deleteCategory');
-    Route::get('/getCatDetails/{id}', 'Admin\Category\CategoryController@getCategoryDetails')->name('editCategory');
-    Route::post('/do_update_category','Admin\Category\CategoryController@updateCategory')->name('updateCategory');
+//Property dashboard Routing
+Route::group(['prefix' => '/manage-property', 'middleware' => 'prevent-back-history'], function() {
+    Route::get('/','Admin\Property\PropertyController@index')->name('propertyHome');
+    Route::get('/getProperty','Admin\Property\PropertyController@getProperty');
+    Route::post('/add_property','Admin\Property\PropertyController@add_property');
+    Route::post('/property-detail','Admin\Property\PropertyController@property_detail');
+    
 });
-//Product Routing
-Route::group(['prefix' => '/manage-products', 'middleware' => 'prevent-back-history'], function() {
-    Route::get('/','Admin\Product\ProductController@index')->name('productsHome');
-    Route::get('/getProducts', 'Admin\Product\ProductController@getProducts')->name('getProducts');
-    Route::post('/add_product', 'Admin\Product\ProductController@addProduct')->name('addProduct');
-    Route::get('/editProductDetails/{id}', 'Admin\Product\ProductController@editProductDetails')->name('editProduct');
-    Route::post('/do_update_product','Admin\Product\ProductController@updateProduct')->name('updateProduct');
-    Route::get('/deleteProduct/{id}','Admin\Product\ProductController@deleteProduct')->name('deleteProduct');
-    Route::get('/changeProdStatus/{id}', 'Admin\Product\ProductController@changeProductStatus')->name('changeProductStatus');
+//Property site Routing
+Route::group(['prefix' => '/property', 'middleware' => 'prevent-back-history'], function() {
+    Route::get('/property-home','Admin\Property\PropertyController@property_home')->name('propertySiteHome'); 
+    Route::get('/property-detail/{id}','Admin\Property\PropertyController@site_property_details')->name('propertydetails'); 
+    Route::post('/property-detail/message','Admin\Property\PropertyController@message');
+    
 });
+//Mailbox Routing
+Route::group(['prefix' => '/mailbox', 'middleware' => 'prevent-back-history'], function() {
+    Route::get('/mailbox-home','Admin\Mailbox\MailboxController@index')->name('mailboxHome');
+    Route::get('/getMailbox','Admin\Mailbox\MailboxController@getMailbox');   
+    
+});
+
 //Users Routing
 Route::group(['prefix' => '/manage-users', 'middleware' => 'prevent-back-history'], function() {
-    Route::get('/','Admin\User\UserController@index')->name('usersHome');
-    Route::post('/do_update_user','Admin\User\UserController@updateUser')->name('updateUser');
-    Route::get('/getUsers', 'Admin\User\UserController@getUsers')->name('getUsers');
-    Route::post('/add_user','Admin\User\UserController@addUser')->name('addUser');
-    Route::get('/deleteUser/{id}','Admin\User\UserController@deleteUser')->name('deleteUser');
-    Route::get('/getUserDetails/{id}','Admin\User\UserController@getUserDetails')->name('editUser');
-    Route::get('/changeStatus/{id}', 'Admin\User\UserController@changeUserStatus')->name('changeUserStatus');
-    Route::get('/userDetails/{id}', 'Admin\User\UserController@userDetails')->name('userDetails');
-    Route::get('/my-account/{token}', 'Admin\User\UserController@myAccount')->name('myaccount');
-    Route::post('/profile-update', 'Admin\User\UserController@profileUpdate');
-    
-    
+    Route::get('/','Admin\User\UserController@index')->name('usersHome'); 
+    Route::get('/getUsers', 'Admin\User\UserController@getUsers')->name('getUsers'); 
+    Route::get('/getUserDetails/{id}','Admin\User\UserController@getUserDetails')->name('editUser'); 
+    Route::post('/do_update_user','Admin\User\UserController@updateUser')->name('updateUser');  
 });
 
     
